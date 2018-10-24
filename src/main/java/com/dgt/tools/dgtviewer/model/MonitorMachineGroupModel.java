@@ -36,7 +36,7 @@ public class MonitorMachineGroupModel implements ListModel<MonitorMachine>, Mach
 		
 		if(mmF == null){
 			mmF=new MonitorMachine(host, label);
-			mmF.getMachineModel().generateRandomPos();
+			//mmF.getMachineModel().generateRandomPos();
 			monitorMachineList.add(mmF);
 		}
 	}

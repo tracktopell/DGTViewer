@@ -24,6 +24,9 @@ public class MonitorMachine {
 
 	public MonitorMachine(String host, String label) {
 		this.machineModel = new MachineModel(host, label);
+		this.machineModel.setPosX(0);
+		this.machineModel.setPosY(0);
+		this.machineModel.setPosZ(0);
 	}
 
 	public MachineModel getMachineModel() {

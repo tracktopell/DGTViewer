@@ -3,9 +3,19 @@ package com.dgt.tools.dgtviewer.view;
 import com.dgt.tools.dgtviewer.controller.MonitorMachine;
 import com.dgt.tools.dgtviewer.model.MonitorListUpdater;
 import com.dgt.tools.dgtviewer.model.MonitorMachineGroupModel;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.ListSelectionModel;
+import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -27,6 +37,18 @@ public class MainApp extends javax.swing.JFrame implements MonitorListUpdater {
 	public MainApp() {
 		initComponents();
 		renderPanel              = (RenderPanel)jPanel1;
+		Image         iconImage    = null;
+		BufferedImage imgBackgound = null;
+		try{
+			iconImage    = ImageIO.read(
+					getClass().getResourceAsStream("/images/DGTelecomunicaciones_icono_100x100.png"));
+			imgBackgound = ImageIO.read(
+					getClass().getResourceAsStream("/images/MAPA_DEFAULT_1.png"));
+			renderPanel.setImgBackgound(imgBackgound);
+			setIconImage(iconImage);
+		}catch(IOException ioe){
+		}
+		
 		monitorMachineGroupModel = new MonitorMachineGroupModel();
 		machineJList.setModel(monitorMachineGroupModel);
 		machineJList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -41,7 +63,6 @@ public class MainApp extends javax.swing.JFrame implements MonitorListUpdater {
 			}
 		});
 
-		monitorMachineGroupModel.add("localhost", "m1");
 		renderPanel.setMachineModelAccesor(monitorMachineGroupModel);
 		
 		MonitorMachine.setMonitorListUpdater(this);
@@ -239,23 +260,32 @@ public class MainApp extends javax.swing.JFrame implements MonitorListUpdater {
     }//GEN-LAST:event_mnuExitActionPerformed
 
 	private AddMachineFrm addMachine = null;
-
+	private static MainApp mainFrm;
 	/**
 	 * @param args the command line arguments
 	 */
 	public static void main(String args[]) {
+		
+		mainFrm = new MainApp();
+		
 		/* Set the Nimbus look and feel */
 		//<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
 		/* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
 		 */
 		try {
-			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-				if ("Nimbus".equals(info.getName())) {
-					javax.swing.UIManager.setLookAndFeel(info.getClassName());
-					break;
-				}
-			}
+			final String lookAndFeelClass = "javax.swing.plaf.metal.MetalLookAndFeel";
+            UIManager.setLookAndFeel(lookAndFeelClass);
+			//UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+			//UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
+			JFrame.setDefaultLookAndFeelDecorated(true);
+			JDialog.setDefaultLookAndFeelDecorated(true);
+//			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//				if ("Nimbus".equals(info.getName())) {
+//					javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//					break;
+//				}
+//			}
 		} catch (ClassNotFoundException ex) {
 			java.util.logging.Logger.getLogger(MainApp.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (InstantiationException ex) {
@@ -270,7 +300,8 @@ public class MainApp extends javax.swing.JFrame implements MonitorListUpdater {
 		/* Create and display the form */
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				new MainApp().setVisible(true);
+				mainFrm.setVisible(true);
+				mainFrm.monitorMachineGroupModel.add("localhost", "machine_1");
 			}
 		});
 	}
